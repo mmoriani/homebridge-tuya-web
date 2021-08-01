@@ -363,10 +363,6 @@ export abstract class BaseAccessory {
     );
   }
 
-  public mergeCache(cache: any) {
-    return this.cache.merge(cache);
-  }
-
   public updateAccessory(device: TuyaDevice) {
     const setCharacteristic = (characteristic, value): void => {
       const char =
