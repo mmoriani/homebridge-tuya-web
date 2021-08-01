@@ -49,7 +49,7 @@ export class TargetPositionCharacteristic extends TuyaWebCharacteristic {
     const value = (homekitValue as number) === 0 ? 0 : 1;
 
     const data: DeviceState = {
-      target_cover_state: value === 0 ? CoverState.Closing : CoverState.Opening,
+      // target_cover_state: value === 0 ? CoverState.Closing : CoverState.Opening,
       state: value === 0 ? CoverState.Closing : CoverState.Opening,
     };
 
@@ -58,6 +58,25 @@ export class TargetPositionCharacteristic extends TuyaWebCharacteristic {
       .then(async () => {
         this.debug("[SET] %s", value);
         callback();
+        this.accessory.setCharacteristic(
+          this.accessory.platform.Characteristic.TargetPosition,
+          value ? 100 : 0,
+          true
+        );
+        setTimeout(() => {
+          data.state = CoverState.Stopped;
+          this.accessory.mergeCache(data);
+          this.accessory.setCharacteristic(
+            this.accessory.platform.Characteristic.CurrentPosition,
+            value ? 100 : 0,
+            true
+          );
+          this.accessory.setCharacteristic(
+            this.accessory.platform.Characteristic.PositionState,
+            this.accessory.platform.Characteristic.PositionState.STOPPED,
+            true
+          );
+        }, 5000);
       })
       .catch(this.accessory.handleError("SET", callback));
   }

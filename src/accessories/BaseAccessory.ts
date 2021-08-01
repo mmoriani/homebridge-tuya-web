@@ -28,7 +28,7 @@ import { DeviceOfflineError } from "../errors/DeviceOfflineError";
 import { TuyaBoolean } from "../helpers/TuyaBoolean";
 
 export type CharacteristicConstructor = WithUUID<{
-  new (): Characteristic;
+  new(): Characteristic;
 }>;
 
 type UpdateCallback = (
@@ -224,8 +224,7 @@ export abstract class BaseAccessory {
         ].includes(service.UUID)
       ) {
         this.info(
-          `Removing superfluous service: ${
-            service.displayName
+          `Removing superfluous service: ${service.displayName
           } (${service.characteristics.map((c) => c.displayName)})`
         );
         outdatedServices.push(service);
@@ -362,6 +361,10 @@ export abstract class BaseAccessory {
       method,
       payload
     );
+  }
+
+  public mergeCache(cache: any) {
+    return this.cache.merge(cache);
   }
 
   public updateAccessory(device: TuyaDevice) {
